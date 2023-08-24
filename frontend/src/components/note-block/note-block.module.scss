@@ -1,0 +1,22 @@
+@import "../../assets/styles/colors";
+
+$padding: 10px;
+
+.nameAndDate {
+  width: 10%;
+  background-color: rgba($second-color, 0.8);
+  backdrop-filter: blur(4px);
+  padding: $padding;
+}
+
+.context {
+  width: 90%;
+  padding: $padding;
+  background: rgba($second-color, 0.4);
+  backdrop-filter: blur(100);
+}
+
+.nameAndDate > span, .context {
+  font-size: 16px;
+  word-break: break-all;
+}

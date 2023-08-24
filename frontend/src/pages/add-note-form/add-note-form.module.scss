@@ -1,0 +1,16 @@
+@import "../../assets/styles/colors";
+
+.addNoteForm {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  padding: 15px;
+  max-width: 270px;
+  width: 100%;
+  background: $forth-color;
+  border-radius: 3px;
+
+  h1 {
+    font-size: 16px;
+  }
+}
