@@ -2,6 +2,8 @@ import {Args, ID, Int, Mutation, Query, Resolver} from "@nestjs/graphql";
 import {NotesService} from "./notes.service";
 import {Note} from "../graph-ql/schemas/note.schema";
 import {INote} from "./interfaces/note.interface";
+import {UpdateDto} from "./dto/update.dto";
+import {FindAllDto} from "./dto/find-all.dto";
 
 @Resolver(of => Note)
 export class NotesResolver {
@@ -18,8 +20,8 @@ export class NotesResolver {
     }
 
     @Query(returns => [Note])
-    async findAll(): Promise<INote[]> {
-        return await this.notesService.findAll()
+    async findAll(@Args() { page } : FindAllDto): Promise<INote[]> {
+        return await this.notesService.findAll(page)
     }
 
     @Query(returns => Note)
@@ -33,11 +35,7 @@ export class NotesResolver {
     }
 
     @Mutation(returns => Note)
-    async update(
-        @Args('id', { type: () => Int}) id: number,
-        @Args('name', { nullable: true }) name: string,
-        @Args('context', { nullable: true }) context: string
-    ): Promise<INote> {
+    async update(@Args() {id, name, context} : UpdateDto): Promise<INote> {
         return this.notesService.update({
             id,
             name,

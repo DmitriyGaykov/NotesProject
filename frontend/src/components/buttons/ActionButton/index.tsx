@@ -5,7 +5,7 @@ const ActionButton = ({ onClick, content, className } : IButton) => {
     return (
         <Button
             onClick={onClick}
-            className={className + ' text-white btn-dark btn '}
+            className={className + ' text-white btn '}
         >
             { content }
         </Button>

@@ -24,9 +24,9 @@ export const DEFAULT_NOTE : INote = {
 }
 
 export interface INoteService {
-    findAll() : Promise<INote[]>;
-    findById(id : number) : Promise<INote>;
-    add(note : INoteDto) : Promise<INote>;
-    remove(id : number) : Promise<INote>;
-    update(note : IPatchNoteDto) : Promise<INote>;
+    findAll(page?: number) : Promise<INote[]>;
+    findById(id: number) : Promise<INote>;
+    add(note: INoteDto) : Promise<INote>;
+    remove(id:  number) : Promise<INote>;
+    update(note: IPatchNoteDto) : Promise<INote>;
 }

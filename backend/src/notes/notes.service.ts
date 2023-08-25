@@ -4,6 +4,8 @@ import {NotesDbService} from "./notes-db.service";
 
 @Injectable()
 export class NotesService implements INoteService {
+    private static readonly countTake = 5
+
     constructor(
        private readonly noteDbService : NotesDbService,
     ) {}
@@ -12,8 +14,16 @@ export class NotesService implements INoteService {
         return this.noteDbService.add(note)
     }
 
-    async findAll(): Promise<INote[]> {
-        return this.noteDbService.findAll()
+    async findAll(page : number | undefined): Promise<INote[]> {
+        let skip: number | undefined
+        let take: number | undefined
+
+        if(page !== undefined) {
+            skip = page * NotesService.countTake
+            take = NotesService.countTake
+        }
+
+        return this.noteDbService.findAll(skip, take)
     }
 
     async findById(id: number): Promise<INote> {

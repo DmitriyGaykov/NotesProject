@@ -6,15 +6,18 @@ import {INote, INoteDto, INoteService, IPatchNoteDto} from "./interfaces/note.in
 import {ErrorService} from "../error/error.service";
 
 @Injectable()
-export class NotesDbService implements INoteService {
+export class NotesDbService {
     constructor(
        @InjectRepository(Note) private readonly noteRepository : Repository<Note>,
        private readonly errorService : ErrorService
     ) {}
 
-    async findAll() : Promise<INote[]> {
+    async findAll(skip?: number, take?: number) : Promise<INote[]> {
         try {
-            return await this.noteRepository.find()
+            return await this.noteRepository.find({
+                skip,
+                take
+            })
         } catch {
             throw this.errorService.generateError({
                 database : 'database is not responding'
@@ -53,7 +56,10 @@ export class NotesDbService implements INoteService {
 
             if(note) {
                 await this.noteRepository.remove(note)
-                return note
+                return {
+                    ...note,
+                    id
+                }
             }
 
             throw this.errorService.generateNoContentException()
