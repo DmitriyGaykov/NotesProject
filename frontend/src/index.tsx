@@ -5,16 +5,21 @@ import reportWebVitals from './reportWebVitals';
 
 import './assets/styles/index.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {Provider} from "react-redux";
-import store from "./store";
+import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
+
+const client = new ApolloClient({
+    uri: '/graphql',
+    cache: new InMemoryCache()
+})
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
-    <Provider store={store}>
+    <ApolloProvider client={client}>
         <App />
-    </Provider>
+    </ApolloProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

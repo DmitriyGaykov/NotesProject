@@ -1,7 +1,8 @@
 import {IButton} from "../index";
 import {Button} from "react-bootstrap";
+import {memo} from "react";
 
-const ActionButton = ({ onClick, content, className } : IButton) => {
+const ActionButton = memo(({ onClick, content, className } : IButton) => {
     return (
         <Button
             onClick={onClick}
@@ -10,6 +11,6 @@ const ActionButton = ({ onClick, content, className } : IButton) => {
             { content }
         </Button>
     )
-}
+})
 
 export default ActionButton

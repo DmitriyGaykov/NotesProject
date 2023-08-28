@@ -1,5 +1,4 @@
 import Note from "./";
-import {IQuery} from "../../../services/api.interfaces";
 
 export const equal = (note1 : Note, note2 : Note) : boolean => {
     return (
@@ -10,32 +9,3 @@ export const equal = (note1 : Note, note2 : Note) : boolean => {
     )
 }
 
-export const createAddMutation = ({name, context} : Note) : IQuery => {
-    const query = `
-        mutation {
-            add(name: "${name}", context: "${context}") {
-                id,
-                name,
-                context,
-                publishDate
-            }
-        }
-    `
-
-    return { query }
-}
-
-export const createGetAllQuery = (page?: number) : IQuery => {
-    return {
-        query: `
-        query {
-            findAll ${ page === undefined  || `(page: ${page})` } {
-                id
-                name
-                context
-                publishDate
-            }
-        }
-        `
-    }
-}

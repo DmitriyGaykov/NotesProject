@@ -1,46 +1,51 @@
-import {useEffect, useState} from "react";
-import Note from "../../db/models/note";
+import {useCallback, useEffect, useState} from "react";
+import Note, {noteMapper} from "../../db/models/note";
 import NoteBlock from "../../components/note-block";
-import {useAppDispatch, useAppSelector} from "../../store";
-import {clearNotes} from "../../store/reducers/notes-reducer";
-import {getAllAction} from "../../store/reducers/notes-reducer/action";
 import {ActionButton} from "../../components/buttons";
+import {useQuery} from "@apollo/client";
+import {FIND_ALL_NOTES} from "../../services/queries/note";
 
 const NotesPage = () => {
-    const dispatch = useAppDispatch()
-
-    const storeNotes : Note[] = useAppSelector(state => state.notes.notes)
-
-    const [notes, setNotes] = useState<Note[]>([])
-    const [i, setI] = useState(0)
     const [showYet, setShowYet] = useState(true)
+    const [notes, setNotes] = useState<Note[]>([])
+    const [i, setI] = useState(1)
 
-    const onYet = () => {
-        if(storeNotes.length !== 0) {
-            dispatch(getAllAction(i))
-            setI(i + 1)
+    const { data, loading, error, refetch } = useQuery(FIND_ALL_NOTES, {
+        variables: {
+            page: i + 1
         }
-    }
+    })
 
     useEffect(() => {
-        setNotes([...notes, ...storeNotes])
-    }, [storeNotes]);
+        if(!loading && data) {
+            const findAllRes = data?.findAll as Note[]
+            const _notes = noteMapper.map(findAllRes) as Note[]
+            setNotes([...notes, ..._notes])
+        }
+    }, [loading, data]);
 
     useEffect(() => {
-        setShowYet(
-            storeNotes.length !== 0 &&
-            notes.length / i  === storeNotes.length
-        )
+        const findAllRes = data?.findAll as Note[];
+
+        if(findAllRes) {
+            setShowYet(
+                findAllRes.length !== 0 &&
+                notes.length / i === findAllRes.length
+            )
+        }
     }, [notes]);
 
-    useEffect(() => {
-        dispatch(getAllAction(i))
-        setI(i + 1)
+    const onYet = useCallback(async () => {
+        try {
+            setI(i + 1)
 
-        return () => {
-            dispatch(clearNotes())
+            await refetch({
+                page: i - 1
+            })
+        } catch(e) {
+            console.error(e)
         }
-    }, []);
+    }, [i])
 
     return (
         <div className='container d-flex flex-column gap-sm-2 w-100'>

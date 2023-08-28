@@ -2,28 +2,36 @@
 import style from './add-note-form.module.scss'
 import {FormInput} from "../../components/inputs";
 import {ActionButton} from "../../components/buttons";
-import React, {useState} from "react";
-import {useAppDispatch} from "../../store";
-import {setShowForm} from "../../store/reducers/notes-reducer";
-import {addNoteAction} from "../../store/reducers/notes-reducer/action";
+import React, {useCallback, useState} from "react";
+import {useMutation} from "@apollo/client";
+import {ADD_NOTE} from "../../services/mutations/note";
 
 const AddNoteForm = () => {
-    const dispatch = useAppDispatch()
-
     const [name, setName] = useState('')
     const [context, setContext] = useState('')
 
-    const onCancel = () => {
-        dispatch(setShowForm(false))
-    }
+    const [createNote] = useMutation(ADD_NOTE)
 
+    const onCancel = useCallback(() => {
 
-    const onSend = () => {
-        dispatch(addNoteAction({
-            name,
-            context
-        }))
-    }
+    }, [])
+
+    const onSend = useCallback(async () => {
+        try {
+            const {data} = await createNote({
+                variables: {
+                    input: {
+                        name,
+                        context
+                    }
+                }
+            })
+
+            console.log(data)
+        } catch (e) {
+            console.error(e)
+        }
+    }, [createNote, name, context])
 
     return (
         <form className={style.addNoteForm + ' d-flex flex-column gap-3'} >
